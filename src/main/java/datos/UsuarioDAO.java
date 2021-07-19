@@ -1,6 +1,6 @@
 package datos;
 
-import domain.Usuario;
+import domain.UsuarioDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuarioDAO {
+public class UsuarioDAO implements IUsuarioDAO{
     private Connection conexionTransaccional;
 
     private static final String SQL_SELECT = "SELECT id_usuario, usuario, password FROM usuario";
@@ -24,12 +24,13 @@ public class UsuarioDAO {
         this.conexionTransaccional = conexionTransaccional;
     }
 
-    public List<Usuario> seleccionar() throws SQLException {
+    @Override
+    public List<UsuarioDTO> seleccionar() throws SQLException {
         Connection conn = null;
         PreparedStatement stmnt = null;
         ResultSet rs = null;
-        Usuario usuario = null;
-        List<Usuario> usuarios = new ArrayList<>();
+        UsuarioDTO usuario = null;
+        List<UsuarioDTO> usuarios = new ArrayList<>();
 
         conn = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
         stmnt = conn.prepareStatement(SQL_SELECT);
@@ -39,7 +40,7 @@ public class UsuarioDAO {
             int idUsuario = rs.getInt("id_usuario");
             String nombre = rs.getString("usuario");
             String password = rs.getString("password");
-            usuario = new Usuario(idUsuario, nombre, password);
+            usuario = new UsuarioDTO(idUsuario, nombre, password);
             usuarios.add(usuario);
         }
         Conexion.close(rs);
@@ -50,7 +51,8 @@ public class UsuarioDAO {
         return usuarios;
     }
 
-    public int insertar(Usuario usuario) throws SQLException {
+    @Override
+    public int insertar(UsuarioDTO usuario) throws SQLException {
         Connection conn = null;
         PreparedStatement stmnt = null;
         int registros = 0;
@@ -68,7 +70,8 @@ public class UsuarioDAO {
         return registros;
     }
 
-    public int actualizar(Usuario usuario) throws SQLException {
+    @Override
+    public int actualizar(UsuarioDTO usuario) throws SQLException {
         Connection conn = null;
         PreparedStatement stmnt = null;
         int registros = 0;
@@ -87,7 +90,8 @@ public class UsuarioDAO {
         return registros;
     }
 
-    public int eliminar(Usuario usuario) throws SQLException {
+    @Override
+    public int eliminar(UsuarioDTO usuario) throws SQLException {
         Connection conn = null;
         PreparedStatement stmnt = null;
         int registros = 0;

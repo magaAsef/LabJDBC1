@@ -1,6 +1,7 @@
 import datos.Conexion;
+import datos.IUsuarioDAO;
 import datos.UsuarioDAO;
-import domain.Usuario;
+import domain.UsuarioDTO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,14 +15,13 @@ public class Main {
             if(conexion.getAutoCommit()){
                 conexion.setAutoCommit(false);
             }
-            
-            UsuarioDAO usuarioDao = new UsuarioDAO(conexion);
-            Usuario usuarioNuevo1 = new Usuario("Maga123", "1234");
-            Usuario usuarioNuevo2 = new Usuario("Marilyn", "hfijuf0");
-            usuarioDao.insertar(usuarioNuevo1);
-            usuarioDao.insertar(usuarioNuevo2);
+
+            IUsuarioDAO usuarioDao = new UsuarioDAO(conexion);
+            List<UsuarioDTO> usuarios = usuarioDao.seleccionar();
+            for(UsuarioDTO usuario : usuarios){
+                System.out.println(usuario);
+            }
             conexion.commit();
-            System.out.println("Se han guardado los datos de manera exitosa");
         } catch (SQLException throwables) {
             throwables.printStackTrace(System.out);
             System.out.println("Entramos al Rollback");
